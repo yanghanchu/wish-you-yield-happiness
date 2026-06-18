@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-pink: #ff8fbc;
+  --deep-pink: #ff5fa2;
+  --light-pink: #ffe4ef;
+  --soft-pink: #fff3f8;
+  --cream: #fffafc;
+  --purple: #c8a2ff;
+  --text-main: #5a3d4f;
+  --text-light: #9c7b91;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 12% 15%, rgba(255, 255, 255, 0.9) 0 12%, transparent 13%),
+    linear-gradient(135deg, #fff5fa 0%, #ffe4ef 45%, #f7e9ff 100%);
+  color: var(--text-main);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  border: 1px solid rgba(255, 143, 188, 0.35);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--text-main);
+  padding: 0.78rem 0.95rem;
+  outline: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--deep-pink);
+  box-shadow: 0 0 0 4px rgba(255, 143, 188, 0.16);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.love-card {
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 12px 30px rgba(255, 143, 188, 0.18);
+  backdrop-filter: blur(12px);
+}
+
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff8fbc, #ff5fa2);
+  color: white;
+  padding: 0.72rem 1.08rem;
+  box-shadow: 0 8px 18px rgba(255, 95, 162, 0.28);
+  font-weight: 700;
+}
+
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--text-main);
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(255, 143, 188, 0.28);
+  font-weight: 700;
+}
+
+.page-shell {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+}
