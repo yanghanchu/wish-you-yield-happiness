@@ -6,6 +6,7 @@ import { DoorOpen, KeyRound, UserRound } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { PinkCard } from '@/components/ui/PinkCard';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
+import { cn } from '@/lib/utils/cn';
 
 export function LoginPanel() {
   const [selectedRole, setSelectedRole] = useState<'WY' | 'YYH' | null>(null);
@@ -86,31 +87,21 @@ export function LoginPanel() {
   }
 
   return (
-    <div className="grid gap-5 md:grid-cols-3">
-      {(['WY', 'YYH'] as const).map((item) => (
+    <div className="mx-auto grid w-full max-w-3xl gap-4">
+      <div className="grid grid-cols-3 gap-3">
+        <RoleButton active={selectedRole === 'WY'} label="WY" onClick={() => setSelectedRole('WY')} />
+        <RoleButton active={selectedRole === 'YYH'} label="YYH" onClick={() => setSelectedRole('YYH')} />
         <button
-          key={item}
-          onClick={() => setSelectedRole(item)}
-          className="love-card p-6 text-left transition hover:-translate-y-1 hover:bg-white/90"
+          onClick={() => router.push('/guest-request')}
+          className="love-card flex min-h-28 flex-col items-center justify-center gap-3 p-4 text-center transition hover:-translate-y-1 hover:bg-white/90"
         >
-          <UserRound className="text-rosehouse-deep" />
-          <h2 className="mt-4 text-2xl font-black">{item}</h2>
-          <p className="mt-2 text-sm text-rosehouse-muted">
-            {item === 'WY' ? '进入小屋，继续收藏我们的回忆' : '回到小屋，看看今天的甜蜜'}
-          </p>
+          <DoorOpen className="text-rosehouse-deep" size={24} />
+          <span className="text-lg font-black">访客</span>
         </button>
-      ))}
-      <button
-        onClick={() => router.push('/guest-request')}
-        className="love-card p-6 text-left transition hover:-translate-y-1 hover:bg-white/90"
-      >
-        <DoorOpen className="text-rosehouse-deep" />
-        <h2 className="mt-4 text-2xl font-black">访客访问</h2>
-        <p className="mt-2 text-sm text-rosehouse-muted">申请参观公开的小屋内容</p>
-      </button>
+      </div>
 
       {selectedRole && (
-        <PinkCard className="md:col-span-3">
+        <PinkCard>
           <form action={onSubmit} className="grid gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
             <label className="text-sm font-bold">
               <span className="mb-2 block">邮箱</span>
@@ -122,16 +113,27 @@ export function LoginPanel() {
             </label>
             <PrimaryButton disabled={loading}>
               <KeyRound size={17} />
-              {loading ? '登录中' : `以 ${selectedRole} 登录`}
+              {loading ? '登录中' : '登录'}
             </PrimaryButton>
-            <div className="rounded-2xl bg-white/70 p-3 text-xs font-bold text-rosehouse-muted md:col-span-3">
-              <p>NEXT_PUBLIC_SUPABASE_URL exists: {String(hasSupabaseUrl)}</p>
-              <p>NEXT_PUBLIC_SUPABASE_ANON_KEY exists: {String(hasSupabaseAnonKey)}</p>
-            </div>
             {error && <p className="whitespace-pre-line text-sm font-bold text-rosehouse-deep md:col-span-3">{error}</p>}
           </form>
         </PinkCard>
       )}
     </div>
+  );
+}
+
+function RoleButton({ active, label, onClick }: { active: boolean; label: 'WY' | 'YYH'; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        'love-card flex min-h-28 flex-col items-center justify-center gap-3 p-4 text-center transition hover:-translate-y-1 hover:bg-white/90',
+        active && 'bg-white/95 ring-2 ring-rosehouse-deep'
+      )}
+    >
+      <UserRound className="text-rosehouse-deep" size={24} />
+      <span className="text-lg font-black">{label}</span>
+    </button>
   );
 }
