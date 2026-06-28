@@ -76,7 +76,7 @@ export function LoginPanel() {
         return;
       }
 
-      router.push('/');
+      router.push('/records');
       router.refresh();
     } catch (cause) {
       console.error('Supabase login error:', cause);
