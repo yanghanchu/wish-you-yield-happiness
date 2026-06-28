@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import { CalendarHeart, Heart, MessageCircleHeart, Sparkles, WandSparkles } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import { AppLayout } from '@/components/layout/AppLayout';
+import { getCurrentUser } from '@/lib/auth/getCurrentUser';
 import { calculateLoveDays } from '@/lib/utils/dates';
 
-const START_DATE = '2025-01-14';
+const START_DATE = '2026-05-20';
 
 const shortcuts = [
   { href: '/records', label: '恋爱记录', icon: CalendarHeart },
@@ -11,12 +14,18 @@ const shortcuts = [
   { href: '/messages', label: '留言墙', icon: MessageCircleHeart }
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const current = await getCurrentUser();
+
+  if (!current) {
+    redirect('/login');
+  }
+
   const loveDays = calculateLoveDays(START_DATE);
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#fff7fb] text-rosehouse-ink">
-      <section className="page-shell flex min-h-screen flex-col justify-center py-10">
+    <AppLayout profile={current.profile}>
+      <section className="flex min-h-[calc(100vh-8rem)] flex-col justify-center">
         <div className="mx-auto w-full max-w-5xl">
           <div className="love-card relative overflow-hidden px-6 py-12 text-center md:px-12 md:py-16">
             <div className="absolute left-8 top-8 size-24 rounded-full bg-pink-100/80 blur-2xl" />
@@ -51,17 +60,8 @@ export default function HomePage() {
               );
             })}
           </div>
-
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <Link href="/login" className="primary-button min-h-14 text-base">
-              登录小屋
-            </Link>
-            <Link href="/guest-request" className="secondary-button min-h-14 text-base">
-              访客申请
-            </Link>
-          </div>
         </div>
       </section>
-    </main>
+    </AppLayout>
   );
 }
