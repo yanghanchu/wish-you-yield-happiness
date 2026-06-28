@@ -10,7 +10,12 @@ export async function getCurrentUser() {
 
   if (!user) return null;
 
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single<Profile>();
+  const { data: profile, error } = await supabase.from('profiles').select('*').eq('id', user.id).maybeSingle<Profile>();
+  if (error) {
+    console.error('Failed to load profile for current user:', error);
+    return null;
+  }
+
   if (!profile) return null;
 
   return { user, profile };
