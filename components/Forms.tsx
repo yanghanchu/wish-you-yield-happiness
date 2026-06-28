@@ -28,11 +28,11 @@ export function RecordForm({ role, record }: { role: UserRole; record?: LoveReco
       <ImageUploadField prefix="records" multiple label="图片上传" />
       <div className="grid gap-4 md:grid-cols-3">
         <label className="text-sm font-bold">
-          日期
+          记录发生日期
           <input name="date" type="date" defaultValue={record?.date ?? todayIso()} />
         </label>
         <label className="text-sm font-bold">
-          上传人
+          记录人
           <select name="author_role" defaultValue={record?.author_role ?? role}>
             <option>WY</option>
             <option>YYH</option>
@@ -50,6 +50,7 @@ export function RecordForm({ role, record }: { role: UserRole; record?: LoveReco
           </select>
         </label>
       </div>
+      <p className="-mt-2 text-xs font-bold text-rosehouse-muted">这里记录的是事情发生的时间，可以自己选择，不按上传时间计算。</p>
       <label className="text-sm font-bold">
         标签，用英文逗号分隔
         <input name="tags" defaultValue={(record?.tags ?? []).join(', ')} />
