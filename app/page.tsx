@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { CalendarHeart, Heart, MessageCircleHeart, Sparkles, WandSparkles } from 'lucide-react';
+import { CalendarHeart, Gift, Heart, MessageCircleHeart, Sparkles, WandSparkles } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { getCurrentUser } from '@/lib/auth/getCurrentUser';
@@ -8,10 +8,10 @@ import { calculateLoveDays } from '@/lib/utils/dates';
 const START_DATE = '2026-05-20';
 
 const shortcuts = [
-  { href: '/records', label: '恋爱记录', icon: CalendarHeart },
-  { href: '/anniversaries', label: '纪念日', icon: Sparkles },
-  { href: '/wishlist', label: '愿望清单', icon: WandSparkles },
-  { href: '/messages', label: '留言墙', icon: MessageCircleHeart }
+  { href: '/records', label: '日常记录', text: '记录美好瞬间', icon: CalendarHeart },
+  { href: '/anniversaries', label: '纪念日', text: '重要的日子', icon: Sparkles },
+  { href: '/wishlist', label: '心愿清单', text: '未来的计划', icon: WandSparkles },
+  { href: '/timeline', label: '回忆库', text: '珍藏的时光', icon: MessageCircleHeart }
 ];
 
 export default async function HomePage() {
@@ -25,43 +25,80 @@ export default async function HomePage() {
 
   return (
     <AppLayout profile={current.profile}>
-      <section className="flex min-h-[calc(100vh-8rem)] flex-col justify-center">
-        <div className="mx-auto w-full max-w-5xl">
-          <div className="love-card relative overflow-hidden px-6 py-12 text-center md:px-12 md:py-16">
-            <div className="absolute left-8 top-8 size-24 rounded-full bg-pink-100/80 blur-2xl" />
-            <div className="absolute bottom-6 right-10 size-28 rounded-full bg-purple-100/80 blur-2xl" />
-            <div className="relative">
-              <p className="text-sm font-black text-rosehouse-muted">我们已经在一起</p>
-              <div className="mt-5 flex items-end justify-center gap-3">
-                <span className="text-7xl font-black leading-none text-rosehouse-deep md:text-9xl">{loveDays}</span>
-                <span className="mb-3 text-2xl font-black md:text-4xl">天</span>
+      <section className="min-h-[calc(100vh-8rem)]">
+        <div className="mx-auto w-full max-w-6xl">
+          <div className="relative overflow-hidden rounded-[34px] border-4 border-[#3f2f25] bg-[#fff5ea] px-5 py-12 shadow-[0_18px_0_rgba(63,47,37,0.08)] md:px-10 md:py-16">
+            <Decorations />
+            <div className="relative grid items-center gap-8 md:grid-cols-[1fr_1.4fr_1fr]">
+              <AvatarCard src="/avatars/wy.jpg" label="WY" />
+
+              <div className="text-center">
+                <p className="text-lg font-black tracking-[0.18em] text-[#9f8a78]">我们已相爱</p>
+                <div className="mt-5 flex items-end justify-center gap-3">
+                  <span className="text-7xl font-black leading-none text-[#f39b58] drop-shadow-sm md:text-9xl">{loveDays}</span>
+                  <span className="mb-3 text-3xl font-black text-[#5a3d35] md:text-5xl">天</span>
+                </div>
+                <div className="mx-auto mt-7 flex max-w-md items-center justify-center gap-4 text-[#f5a5b5]">
+                  <span className="h-[3px] flex-1 rounded-full bg-[#f7c4cf]" />
+                  <Heart className="fill-current" size={34} />
+                  <span className="h-[3px] flex-1 rounded-full bg-[#f7c4cf]" />
+                </div>
+                <p className="mt-5 text-sm font-black tracking-[0.16em] text-[#8b7768]">从 2026 年 5 月 20 日开始</p>
               </div>
-              <div className="mx-auto mt-7 flex max-w-md items-center justify-center gap-4 text-rosehouse-primary">
-                <span className="h-px flex-1 bg-pink-200" />
-                <Heart className="fill-current" size={24} />
-                <span className="h-px flex-1 bg-pink-200" />
-              </div>
-              <p className="mt-5 text-lg font-black">今天也喜欢你一下</p>
+
+              <AvatarCard src="/avatars/yyh.jpg" label="YYH" />
             </div>
           </div>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <section className="mt-10">
+            <div className="mb-4 flex items-center gap-2 text-[#5a3d35]">
+              <Gift className="text-[#f39b58]" size={24} />
+              <h2 className="text-2xl font-black">快速入口</h2>
+            </div>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {shortcuts.map((item) => {
               const Icon = item.icon;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="love-card flex min-h-32 flex-col items-center justify-center gap-3 p-5 text-center transition hover:-translate-y-1 hover:bg-white/95"
+                  className="group rounded-[24px] border-[3px] border-[#3f2f25] bg-white/85 p-6 text-center shadow-[0_8px_0_rgba(63,47,37,0.08)] transition hover:-translate-y-1 hover:bg-[#fffaf3]"
                 >
-                  <Icon className="text-rosehouse-deep" size={26} />
-                  <span className="text-lg font-black">{item.label}</span>
+                  <div className="mx-auto flex size-24 items-center justify-center overflow-hidden rounded-full border-[3px] border-[#3f2f25] bg-[#ffe9d2] text-[#f39b58] transition group-hover:scale-105">
+                    <Icon size={34} />
+                  </div>
+                  <p className="mt-4 text-xl font-black text-[#4a3329]">{item.label}</p>
+                  <p className="mt-2 text-sm font-bold text-[#9f8a78]">{item.text}</p>
                 </Link>
               );
             })}
           </div>
+          </section>
         </div>
       </section>
     </AppLayout>
+  );
+}
+
+function AvatarCard({ src, label }: { src: string; label: string }) {
+  return (
+    <div className="flex flex-col items-center">
+      <div className="relative size-36 overflow-hidden rounded-full border-[5px] border-[#3f2f25] bg-[#ffd46c] p-2 shadow-[0_8px_0_rgba(63,47,37,0.12)] md:size-44">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} alt={label} className="size-full rounded-full object-cover" />
+      </div>
+      <p className="mt-3 text-sm font-black tracking-[0.2em] text-[#9f8a78]">{label}</p>
+    </div>
+  );
+}
+
+function Decorations() {
+  return (
+    <>
+      <span className="absolute left-8 top-10 text-3xl text-[#f5c4cf]">♡</span>
+      <span className="absolute bottom-10 left-12 text-2xl text-[#e7d6c8]">✦</span>
+      <span className="absolute right-12 top-12 text-2xl text-[#e7d6c8]">✧</span>
+      <span className="absolute bottom-12 right-10 text-3xl text-[#f5c4cf]">♡</span>
+    </>
   );
 }
