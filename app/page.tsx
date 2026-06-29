@@ -1,9 +1,12 @@
 import Link from 'next/link';
 import { CalendarHeart, Gift, Heart, MessageCircleHeart, Sparkles, WandSparkles } from 'lucide-react';
 import { redirect } from 'next/navigation';
+import { AvatarUploader } from '@/components/AvatarUploader';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { getCurrentUser } from '@/lib/auth/getCurrentUser';
+import { createClient } from '@/lib/supabase/server';
 import { calculateLoveDays } from '@/lib/utils/dates';
+import type { Profile, UserRole } from '@/lib/types';
 
 const START_DATE = '2026-05-20';
 
@@ -21,6 +24,9 @@ export default async function HomePage() {
     redirect('/login');
   }
 
+  const supabase = await createClient();
+  const { data: profiles } = await supabase.from('profiles').select('id, role, display_name, avatar_url');
+  const profileMap = new Map((profiles ?? []).map((profile) => [profile.role, profile as Profile]));
   const loveDays = calculateLoveDays(START_DATE);
 
   return (
@@ -30,7 +36,7 @@ export default async function HomePage() {
           <div className="relative overflow-hidden rounded-[34px] border-4 border-[#3f2f25] bg-[#fff5ea] px-5 py-12 shadow-[0_18px_0_rgba(63,47,37,0.08)] md:px-10 md:py-16">
             <Decorations />
             <div className="relative grid items-center gap-8 md:grid-cols-[1fr_1.4fr_1fr]">
-              <AvatarCard src="/avatars/wy.jpg" label="WY" />
+              <AvatarUploader ownerRole="WY" currentRole={current.profile.role} profile={profileMap.get('WY')} />
 
               <div className="text-center">
                 <p className="text-lg font-black tracking-[0.18em] text-[#9f8a78]">我们已相爱</p>
@@ -46,7 +52,7 @@ export default async function HomePage() {
                 <p className="mt-5 text-sm font-black tracking-[0.16em] text-[#8b7768]">从 2026 年 5 月 20 日开始</p>
               </div>
 
-              <AvatarCard src="/avatars/yyh.jpg" label="YYH" />
+              <AvatarUploader ownerRole="YYH" currentRole={current.profile.role} profile={profileMap.get('YYH')} />
             </div>
           </div>
 
@@ -55,40 +61,28 @@ export default async function HomePage() {
               <Gift className="text-[#f39b58]" size={24} />
               <h2 className="text-2xl font-black">快速入口</h2>
             </div>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {shortcuts.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="group rounded-[24px] border-[3px] border-[#3f2f25] bg-white/85 p-6 text-center shadow-[0_8px_0_rgba(63,47,37,0.08)] transition hover:-translate-y-1 hover:bg-[#fffaf3]"
-                >
-                  <div className="mx-auto flex size-24 items-center justify-center overflow-hidden rounded-full border-[3px] border-[#3f2f25] bg-[#ffe9d2] text-[#f39b58] transition group-hover:scale-105">
-                    <Icon size={34} />
-                  </div>
-                  <p className="mt-4 text-xl font-black text-[#4a3329]">{item.label}</p>
-                  <p className="mt-2 text-sm font-bold text-[#9f8a78]">{item.text}</p>
-                </Link>
-              );
-            })}
-          </div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {shortcuts.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="group rounded-[24px] border-[3px] border-[#3f2f25] bg-white/85 p-6 text-center shadow-[0_8px_0_rgba(63,47,37,0.08)] transition hover:-translate-y-1 hover:bg-[#fffaf3]"
+                  >
+                    <div className="mx-auto flex size-24 items-center justify-center overflow-hidden rounded-full border-[3px] border-[#3f2f25] bg-[#ffe9d2] text-[#f39b58] transition group-hover:scale-105">
+                      <Icon size={34} />
+                    </div>
+                    <p className="mt-4 text-xl font-black text-[#4a3329]">{item.label}</p>
+                    <p className="mt-2 text-sm font-bold text-[#9f8a78]">{item.text}</p>
+                  </Link>
+                );
+              })}
+            </div>
           </section>
         </div>
       </section>
     </AppLayout>
-  );
-}
-
-function AvatarCard({ src, label }: { src: string; label: string }) {
-  return (
-    <div className="flex flex-col items-center">
-      <div className="relative size-36 overflow-hidden rounded-full border-[5px] border-[#3f2f25] bg-[#ffd46c] p-2 shadow-[0_8px_0_rgba(63,47,37,0.12)] md:size-44">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={src} alt={label} className="size-full rounded-full object-cover" />
-      </div>
-      <p className="mt-3 text-sm font-black tracking-[0.2em] text-[#9f8a78]">{label}</p>
-    </div>
   );
 }
 
