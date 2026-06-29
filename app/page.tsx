@@ -39,7 +39,7 @@ export default async function HomePage() {
               <AvatarUploader ownerRole="WY" currentRole={current.profile.role} profile={profileMap.get('WY')} />
 
               <div className="text-center">
-                <p className="text-lg font-black tracking-[0.18em] text-[#9f8a78]">我们已相爱</p>
+                <p className="text-lg font-black tracking-[0.18em] text-[#9f8a78]">在一起</p>
                 <div className="mt-5 flex items-end justify-center gap-3">
                   <span className="text-7xl font-black leading-none text-[#f39b58] drop-shadow-sm md:text-9xl">{loveDays}</span>
                   <span className="mb-3 text-3xl font-black text-[#5a3d35] md:text-5xl">天</span>
